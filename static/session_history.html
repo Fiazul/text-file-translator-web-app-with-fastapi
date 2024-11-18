@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Translation History</title>
+    <style>
+        /* Add your CSS here */
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Translation History</h1>
+        <table id="historyTable">
+            <thead>
+                <tr>
+                    <th>Session ID</th>
+                    <th>File Name</th>
+                    <th>File Path</th>
+                    <th>Processed At</th>
+                    <th>Translated File Name</th>
+                    <th>Status</th>
+                    <th>Download</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Rows will be dynamically added here -->
+            </tbody>
+        </table>
+        <p class="error" id="errorMessage"></p>
+    </div>
+
+    <script>
+        // Get the session ID from localStorage
+        function getSessionId() {
+            return localStorage.getItem("sessionId");
+        }
+
+        async function fetchHistory() {
+            const tableBody = document.getElementById("historyTable").querySelector("tbody");
+            const errorMessage = document.getElementById("errorMessage");
+
+            const sessionId = getSessionId();
+            if (!sessionId) {
+                errorMessage.textContent = "No session ID found.";
+                return;
+            }
+
+            try {
+                const response = await fetch(`http://127.0.0.1:8000/history?sessionId=${sessionId}`);
+                if (!response.ok) {
+                    throw new Error("Failed to fetch history data");
+                }
+
+                const data = await response.json();
+                if (!Array.isArray(data.history) || data.history.length === 0) {
+                    errorMessage.textContent = "No history found.";
+                    return;
+                }
+
+                data.history.forEach(item => {
+                    const row = document.createElement("tr");
+                    row.innerHTML = `
+                        <td>${item.sessionId}</td>
+                        <td>${item.fileProcessed.fileName}</td>
+                        <td>${item.fileProcessed.filePath}</td>
+                        <td>${new Date(item.fileProcessed.processedAt).toLocaleString()}</td>
+                        <td>${item.fileProcessed.TranslatedFilename}</td>
+                        <td>${item.fileProcessed.result}</td>
+                        <td><a href="${item.fileProcessed.filePath}" download>Download</a></td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+            } catch (error) {
+                errorMessage.textContent = error.message;
+            }
+        }
+
+        window.onload = fetchHistory;
+    </script>
+</body>
+</html>

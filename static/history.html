@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Translation History</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            width: 90%;
+            max-width: 800px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            text-align: left;
+            padding: 10px;
+        }
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        .error {
+            color: red;
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Translation History</h1>
+        <table id="historyTable">
+            <thead>
+                <tr>
+                    <th>Session ID</th>
+                    <th>File Name</th>
+                    <th>File Path</th>
+                    <th>Processed At</th>
+                    <th>Translated File Name</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Rows will be dynamically added here -->
+            </tbody>
+        </table>
+        <p class="error" id="errorMessage"></p>
+    </div>
+
+    <script>
+        async function fetchHistory() {
+            const tableBody = document.getElementById("historyTable").querySelector("tbody");
+            const errorMessage = document.getElementById("errorMessage");
+        
+            try {
+                const response = await fetch("http://127.0.0.1:8000/history");
+                if (!response.ok) {
+                    throw new Error("Failed to fetch history data");
+                }
+        
+                const data = await response.json();
+        
+                // Check if 'data.history' is an array
+                if (!Array.isArray(data.history)) {
+                    errorMessage.textContent = "Unexpected data format. Expected an array inside 'history'.";
+                    console.error("Expected an array but got:", data.history);
+                    return;
+                }
+        
+                // If there is no data in history
+                if (data.history.length === 0) {
+                    errorMessage.textContent = "No history found.";
+                    return;
+                }
+        
+                // Iterate over the history data and display it in the table
+                data.history.forEach(item => {
+                    const row = document.createElement("tr");
+                    row.innerHTML = `
+                        <td>${item.sessionId}</td>
+                        <td>${item.fileProcessed.fileName}</td>
+                        <td>${item.fileProcessed.filePath}</td>
+                        <td>${new Date(item.fileProcessed.processedAt).toLocaleString()}</td>
+                        <td>${item.fileProcessed.TranslatedFilename}</td>
+                        <td>${item.fileProcessed.result}</td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+            } catch (error) {
+                errorMessage.textContent = error.message;
+            }
+        }
+        
+        window.onload = fetchHistory;
+        
+    </script>
+</body>
+</html>
