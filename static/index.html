@@ -194,15 +194,15 @@
                     const downloadLink = document.createElement('a');
                     downloadLink.href = `http://127.0.0.1:8000/download_translated_file/?file_name=${encodeURIComponent(fileName)}`;
                     downloadLink.textContent = 'Click here to download your translated file.';
-                    downloadLink.style.padding = '10px 20px';
+                    downloadLink.style.padding = '20px 20px';
                     downloadLink.style.color = 'white';
                     downloadLink.style.backgroundColor = '#007BFF';
                     downloadLink.style.borderRadius = '5px';
                     downloadLink.style.textDecoration = 'none';
                     downloadLink.style.display = 'inline-block';
                     downloadLink.style.position = 'absolute';
-                    downloadLink.style.top = '50%';
-                    downloadLink.style.left = '50%';
+                    downloadLink.style.top = '60%';
+                    downloadLink.style.left = '40%';
                     downloadLink.style.transform = 'translate(-50%, -50%)';
                     document.body.appendChild(downloadLink);
                 } else {

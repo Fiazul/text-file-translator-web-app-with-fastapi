@@ -17,7 +17,6 @@
         }
         .container {
             width: 90%;
-            max-width: 800px;
             background: #fff;
             border-radius: 8px;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
@@ -99,11 +98,11 @@
     
                 data.history.forEach(item => {
                     const row = document.createElement("tr");
-                    const fileName = item.fileProcessed.translated_file_name;
+                    const translatedFileName = item.fileProcessed.TranslatedFilename;
+                    console.log("Translated File Name:", translatedFileName);
     
-                    // Generate the download link if the translation is completed
                     const downloadLink = item.fileProcessed.TranslatedFilename
-                        ? `<a href="http://127.0.0.1:8000/download_translated_file/?file_name=${encodeURIComponent(fileName)}" 
+                        ? `<a href="http://127.0.0.1:8000/download_translated_file/?file_name=${encodeURIComponent(translatedFileName)}" 
                               class="download-btn" download>Download</a>`
                         : "Not Available";
     
@@ -112,7 +111,7 @@
                         <td>${item.fileProcessed.fileName}</td>
                         <td>${item.fileProcessed.filePath}</td>
                         <td>${new Date(item.fileProcessed.processedAt).toLocaleString()}</td>
-                        <td>${item.fileProcessed.TranslatedFilename}</td>
+                        <td>${translatedFileName}</td>
                         <td>${item.fileProcessed.result}</td>
                         <td>${downloadLink}</td>
                     `;
