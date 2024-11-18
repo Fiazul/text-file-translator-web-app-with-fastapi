@@ -59,6 +59,7 @@
                 }
 
                 data.history.forEach(item => {
+                    const fileName = item.fileProcessed.translated_file_name;
                     const row = document.createElement("tr");
                     row.innerHTML = `
                         <td>${item.sessionId}</td>

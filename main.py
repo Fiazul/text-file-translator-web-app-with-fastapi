@@ -43,6 +43,11 @@ class TranslationRequest(BaseModel):
     target_language: str
 
 
+@app.get("/")
+async def index():
+    return FileResponse("static/index.html")
+
+
 @app.post("/translate_text/")
 async def translate_text_endpoint(request: TranslationRequest):
     try:

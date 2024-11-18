@@ -1,1 +1,0 @@
-In your case, since you're expecting a .txt file, the content will be the text from that file, encoded as bytes. Later, you decode it using content.decode("utf-8") to convert the bytes into a string, which can then be processed or saved as needed.

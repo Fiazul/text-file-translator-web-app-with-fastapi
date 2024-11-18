@@ -117,9 +117,7 @@
         const fileInput = document.getElementById('file-upload');
         const submitButton = form.querySelector('button');
         const historyButton = document.getElementById("history-button");
-        historyButton.addEventListener("click", () => {
-            window.open("history.html", "_blank");  // This opens the history page in a new tab
-        });
+
 
         let socket;
 
@@ -173,7 +171,7 @@
             submitButton.disabled = true;
 
             historyButton.addEventListener("click", () => {
-                window.location.href = "history.html";
+                window.location.href = "static/history.html";
             });
 
             const formData = new FormData();
