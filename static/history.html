@@ -77,54 +77,61 @@
             const tableBody = document.getElementById("historyTable").querySelector("tbody");
             const errorMessage = document.getElementById("errorMessage");
     
+            // Determine base URL dynamically
+            const baseURL = window.location.origin.includes("localhost") || window.location.origin.includes("127.0.0.1")
+                ? "http://127.0.0.1:8000"
+                : window.location.origin;
+    
             try {
-                const response = await fetch("http://127.0.0.1:8000/history");
+                const response = await fetch(`${baseURL}/history`);
                 if (!response.ok) {
-                    throw new Error("Failed to fetch history data");
+                    throw new Error("Failed to fetch history data. Please try again later.");
                 }
     
                 const data = await response.json();
     
+                // Validate data format
                 if (!Array.isArray(data.history)) {
-                    errorMessage.textContent = "Unexpected data format. Expected an array inside 'history'.";
-                    console.error("Expected an array but got:", data.history);
+                    errorMessage.textContent = "Unexpected data format: 'history' is not an array.";
+                    console.error("Expected 'history' array but got:", data.history);
                     return;
                 }
     
                 if (data.history.length === 0) {
-                    errorMessage.textContent = "No history found.";
+                    errorMessage.textContent = "No history records found.";
                     return;
                 }
     
+                // Populate the table with history records
                 data.history.forEach(item => {
                     const row = document.createElement("tr");
-                    const translatedFileName = item.fileProcessed.TranslatedFilename;
-                    console.log("Translated File Name:", translatedFileName);
-    
-                    const downloadLink = item.fileProcessed.TranslatedFilename
-                        ? `<a href="http://127.0.0.1:8000/download_translated_file/?file_name=${encodeURIComponent(translatedFileName)}" 
+                    const { fileName, filePath, processedAt, TranslatedFilename, result } = item.fileProcessed;
+                    const downloadLink = TranslatedFilename
+                        ? `<a href="${baseURL}/download_translated_file/?file_name=${encodeURIComponent(TranslatedFilename)}" 
                               class="download-btn" download>Download</a>`
                         : "Not Available";
     
                     row.innerHTML = `
                         <td>${item.sessionId}</td>
-                        <td>${item.fileProcessed.fileName}</td>
-                        <td>${item.fileProcessed.filePath}</td>
-                        <td>${new Date(item.fileProcessed.processedAt).toLocaleString()}</td>
-                        <td>${translatedFileName}</td>
-                        <td>${item.fileProcessed.result}</td>
+                        <td>${fileName}</td>
+                        <td>${filePath}</td>
+                        <td>${new Date(processedAt).toLocaleString()}</td>
+                        <td>${TranslatedFilename || "No File"}</td>
+                        <td>${result}</td>
                         <td>${downloadLink}</td>
                     `;
     
                     tableBody.appendChild(row);
                 });
             } catch (error) {
-                errorMessage.textContent = error.message;
+                errorMessage.textContent = `Error: ${error.message}`;
+                console.error("Fetch history error:", error);
             }
         }
     
         window.onload = fetchHistory;
     </script>
+    
     
 </body>
 </html>

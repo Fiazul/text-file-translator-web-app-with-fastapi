@@ -1,0 +1,1 @@
+Dans votre cas, comme vous attendez un fichier .txt, le contenu sera le texte de ce fichier, encodé en octets.  Vous le décoderez ensuite à l'aide de `content.decode("utf-8")` pour convertir les octets en chaîne de caractères, qui pourra alors être traitée ou sauvegardée selon vos besoins.

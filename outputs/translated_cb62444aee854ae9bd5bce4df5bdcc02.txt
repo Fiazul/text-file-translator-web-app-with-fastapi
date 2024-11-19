@@ -1,0 +1,1 @@
+En tu caso, como esperas un archivo .txt, el contenido será el texto de ese archivo, codificado como bytes.  Posteriormente, lo decodificas usando `content.decode("utf-8")` para convertir los bytes en una cadena de texto, la cual puede ser procesada o guardada según sea necesario.

@@ -117,10 +117,13 @@
         const fileInput = document.getElementById('file-upload');
         const submitButton = form.querySelector('button');
         const historyButton = document.getElementById("history-button");
-
-
+    
         let socket;
-
+    
+        const baseURL = window.location.origin.includes("localhost") || window.location.origin.includes("127.0.0.1")
+            ? "http://127.0.0.1:8000"
+            : window.location.origin;
+    
         function getSessionId() {
             let sessionId = localStorage.getItem("sessionId");
             if (!sessionId) {
@@ -129,70 +132,67 @@
             }
             return sessionId;
         }
-
-
+    
         function generateSessionId() {
             return 'session-' + Math.random().toString(36).substr(2, 9);
         }
-
+    
         function connectWebSocket() {
-            socket = new WebSocket('ws://127.0.0.1:8000/ws');
-
+            const wsProtocol = baseURL.startsWith("https") ? "wss://" : "ws://";
+            const wsUrl = `${wsProtocol}${window.location.host}/ws`;
+            socket = new WebSocket(wsUrl);
+    
             socket.onopen = () => {
                 console.log('WebSocket connection established');
             };
-
+    
             socket.onmessage = (event) => {
                 statusDiv.textContent = event.data;
             };
-
+    
             socket.onerror = (error) => {
                 console.error('WebSocket error:', error);
+                statusDiv.textContent = 'WebSocket connection error!';
             };
-
+    
             socket.onclose = () => {
-                console.log('WebSocket connection closed');
-                setTimeout(connectWebSocket, 5000);
+                console.log('WebSocket connection closed. Reconnecting...');
+                setTimeout(connectWebSocket, 5000); 
             };
         }
-
+    
         form.onsubmit = async (e) => {
             e.preventDefault();
-
+    
             const file = fileInput.files[0];
             const targetLanguage = targetLanguageSelect.value;
-            const sessionId = getSessionId();  
-
+            const sessionId = getSessionId();
+    
             if (!file) {
                 statusDiv.textContent = 'Please select a file.';
                 return;
             }
-
+    
             submitButton.disabled = true;
-
-            historyButton.addEventListener("click", () => {
-                window.location.href = "static/history.html";
-            });
-
+            statusDiv.textContent = 'Uploading and translating...';
+    
             const formData = new FormData();
             formData.append('file', file);
             formData.append('target_language', targetLanguage);
-            formData.append('session_id', sessionId);  
-
-            statusDiv.textContent = 'Uploading and translating...';
-
+            formData.append('session_id', sessionId);
+    
             try {
-                const response = await fetch('http://127.0.0.1:8000/translate_file/', {
+                const response = await fetch(`${baseURL}/translate_file/`, {
                     method: 'POST',
                     body: formData
                 });
-
+    
                 const result = await response.json();
                 if (response.ok) {
                     statusDiv.textContent = 'Translation successful!';
                     const fileName = result.translated_file_name;
                     const downloadLink = document.createElement('a');
-                    downloadLink.href = `http://127.0.0.1:8000/download_translated_file/?file_name=${encodeURIComponent(fileName)}`;
+                    downloadLink.href = `${baseURL}/download_translated_file/?file_name=${encodeURIComponent(fileName)}`;
                     downloadLink.textContent = 'Click here to download your translated file.';
                     downloadLink.style.padding = '20px 20px';
                     downloadLink.style.color = 'white';
@@ -200,23 +200,23 @@
                     downloadLink.style.borderRadius = '5px';
                     downloadLink.style.textDecoration = 'none';
                     downloadLink.style.display = 'inline-block';
-                    downloadLink.style.position = 'absolute';
-                    downloadLink.style.top = '60%';
-                    downloadLink.style.left = '40%';
-                    downloadLink.style.transform = 'translate(-50%, -50%)';
+                    downloadLink.style.marginTop = '10px';
                     document.body.appendChild(downloadLink);
                 } else {
-                    statusDiv.textContent = 'Error: ' + result.detail;
+                    statusDiv.textContent = 'Error: ' + (result.detail || 'Unknown error');
                 }
             } catch (error) {
-                statusDiv.textContent = 'Error: ' + error.message;
+                console.error('Fetch error:', error);
+                statusDiv.textContent = 'Error: Unable to process your request.';
             } finally {
                 submitButton.disabled = false;
             }
         };
-        
-
+    
+        historyButton.addEventListener("click", () => {
+            window.location.href = "static/history.html";
+        });
+    
         connectWebSocket();
     </script>
-</body>
-</html>
+    
