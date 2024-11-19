@@ -98,7 +98,7 @@ pip install -r requirements.txt
 - Set the Start Command to:
 ```bash
 
-uvicorn app:app --host 0.0.0.0 --port 10000
+python runserver.py
 ```
 - Add the environment variables in the Settings tab on Render.
 
