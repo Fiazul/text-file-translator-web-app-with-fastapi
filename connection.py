@@ -1,7 +1,18 @@
 from motor.motor_asyncio import AsyncIOMotorClient
+import os
 
-MONGO_URI = "MONGO_DB_URI"
-DATABASE_NAME = "translation_app"
+# Load configuration from environment variables
+MONGO_URI = os.getenv("MONGO_URI", "mongodb://localhost:27017")
+DATABASE_NAME = os.getenv("DATABASE_NAME", "translation_app")
 
-client = AsyncIOMotorClient(MONGO_URI)
-db = client[DATABASE_NAME]
+try:
+    # Create MongoDB client with a 5-second timeout
+    client = AsyncIOMotorClient(MONGO_URI, serverSelectionTimeoutMS=5000)
+    db = client[DATABASE_NAME]
+
+    # Test the connection
+    client.admin.command('ping')
+    print("Connected to MongoDB successfully")
+except Exception as e:
+    print(f"Error connecting to MongoDB: {e}")
+    db = None  # Prevent crashes if connection fails
