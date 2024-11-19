@@ -1,0 +1,1 @@
+In jouw geval, aangezien je een .txt-bestand verwacht, zal de inhoud de tekst uit dat bestand zijn, gecodeerd als bytes. Later decodeer je het met `content.decode("utf-8")` om de bytes om te zetten naar een string, die vervolgens naar behoefte verwerkt of opgeslagen kan worden.

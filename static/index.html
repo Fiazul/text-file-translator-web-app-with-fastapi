@@ -4,94 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>File Translator</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            padding: 20px;
-        }
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-        }
-        input[type="file"] {
-            margin-bottom: 20px;
-        }
-        select, button {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 20px;
-        }
-        #status {
-            margin-top: 20px;
-            font-weight: bold;
-        }
-        /* Style for the container */
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-    
-        /* Style for the button */
-        .download-btn {
-            display: inline-block;
-            background-color: #4CAF50; /* Green background */
-            color: white; /* White text */
-            font-size: 16px;
-            padding: 12px 20px;
-            text-align: center;
-            align-items:center;
-            text-decoration: none; /* Remove underline */
-            border-radius: 5px; /* Rounded corners */
-            transition: background-color 0.3s ease, transform 0.2s ease;
-        }
-    
-        /* Hover effect for the button */
-        .download-btn:hover {
-            background-color: #45a049; /* Slightly darker green */
-            transform: translateY(-2px); /* Slight upward movement */
-        }
-    
-        /* Focus state for accessibility */
-        .download-btn:focus {
-            outline: 2px solid #ddd;
-        }
-    
-        /* Disabled button state */
-        .download-btn:disabled {
-            background-color: #ccc; /* Light gray */
-            color: #666; /* Darker gray text */
-            cursor: not-allowed;
-        }
-        .history-button {
-            background-color: #4CAF50; /* Green background */
-            color: white; /* White text */
-            padding: 10px 20px; /* Padding for the button */
-            font-size: 16px; /* Font size */
-            border: none; /* No border */
-            border-radius: 5px; /* Rounded corners */
-            cursor: pointer; /* Cursor pointer on hover */
-            transition: background-color 0.3s ease, transform 0.3s ease; /* Smooth transition for hover effects */
-            margin-top: 20px; /* Space between the form and button */
-        }
-    
-        .history-button:hover {
-            background-color: #45a049; /* Darker green on hover */
-            transform: scale(1.05); /* Slightly enlarge the button on hover */
-        }
-    
-        .history-button:focus {
-            outline: none; /* Remove outline on focus */
-            box-shadow: 0 0 5px 2px rgba(72, 176, 72, 0.6); /* Green shadow effect when focused */
-        }
-        
-    </style>
+    <link rel="stylesheet" href="static/styles.css">
 </head>
 <body>
     <div class="container">
         <h1>Text Translation</h1>
         <form id="translation-form">
-            <input type="file" id="file-upload" accept=".txt" required><br>
+            <input type="file" id="file-upload" accept=".txt" required>
             <select id="target-language" required>
                 <option value="English">English</option>
                 <option value="Spanish">Spanish</option>
@@ -103,10 +22,10 @@
                 <option value="Chinese">Chinese</option>
                 <option value="Japanese">Japanese</option>
                 <option value="Korean">Korean</option>
-            </select><br>
+            </select>
             <button type="submit">Translate</button>
         </form>
-        <button id="history-button" style="margin-top: 20px;">View Translation History</button>
+        <button id="history-button">View Translation History</button>
         <div id="status"></div>
     </div>
 
@@ -122,7 +41,8 @@
     
         const baseURL = window.location.origin.includes("localhost") || window.location.origin.includes("127.0.0.1")
             ? "http://127.0.0.1:8000"
-            : window.location.origin;
+            : "https://text-file-translator-web-app-with-fastapi.onrender.com";
+    
     
         function getSessionId() {
             let sessionId = localStorage.getItem("sessionId");
@@ -139,7 +59,7 @@
     
         function connectWebSocket() {
             const wsProtocol = baseURL.startsWith("https") ? "wss://" : "ws://";
-            const wsUrl = `${wsProtocol}${window.location.host}/ws`;
+            const wsUrl = `${wsProtocol}${window.location.hostname}/ws`;
             socket = new WebSocket(wsUrl);
     
             socket.onopen = () => {
@@ -219,4 +139,5 @@
     
         connectWebSocket();
     </script>
-    
+</body>
+</html>

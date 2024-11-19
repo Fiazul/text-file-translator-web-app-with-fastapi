@@ -1,0 +1,1 @@
+In your situation, because you're expecting a .txt file, the downloaded data will be the file's text content, represented as bytes.  You'll then need to decode it using `content.decode("utf-8")` to convert those bytes into a string.  This string can then be processed or saved as required.
