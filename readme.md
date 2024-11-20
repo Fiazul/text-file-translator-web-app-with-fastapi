@@ -21,7 +21,7 @@ This repository contains a web application built with FastAPI that allows users 
 - **Python 3.9 or above** installed on your system.
 - **MongoDB Atlas** account for storing history.
 - API key for translation (I got mine from https://ai.google.dev/gemini-api/docs/api-key).
-
+# The genai api key that google provide doesnt do directly translation. so i have write prompt for it. you can do the prompting however you want in translation.py
 ---
 
 ### 1. Clone the Repository
@@ -103,3 +103,4 @@ python runserver.py
 - Add the environment variables in the Settings tab on Render.
 
 - Deploy the service and access it via the provided URL.
+
