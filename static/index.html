@@ -39,11 +39,7 @@
     
         let socket;
     
-        const baseURL = window.location.origin.includes("localhost") || window.location.origin.includes("127.0.0.1")
-            ? "https://text-file-translator-web-app-with-fastapi.onrender.com"
-            : "https://text-file-translator-web-app-with-fastapi.onrender.com";
-    
-    
+        const baseURL = "https://text-file-translator-web-app-with-fastapi.onrender.com"
         function getSessionId() {
             let sessionId = localStorage.getItem("sessionId");
             if (!sessionId) {
@@ -59,7 +55,7 @@
     
         function connectWebSocket() {
             const wsProtocol = baseURL.startsWith("https") ? "wss://" : "ws://";
-            const wsUrl = `${wsProtocol}${window.location.host}/ws`;
+            const wsUrl = `https://text-file-translator-web-app-with-fastapi.onrender.com/ws`;
             socket = new WebSocket(wsUrl);
     
             socket.onopen = () => {
