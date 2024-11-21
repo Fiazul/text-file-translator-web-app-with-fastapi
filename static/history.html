@@ -35,8 +35,8 @@
     
             // Determine base URL dynamically
             const baseURL = window.location.origin.includes("localhost") || window.location.origin.includes("127.0.0.1")
-                ? "http://127.0.0.1:8000"
-                : window.location.origin;
+            ? "https://text-file-translator-web-app-with-fastapi.onrender.com"
+            : "https://text-file-translator-web-app-with-fastapi.onrender.com";
     
             try {
                 const response = await fetch(`${baseURL}/history`);
