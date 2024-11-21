@@ -34,9 +34,7 @@
             const errorMessage = document.getElementById("errorMessage");
     
             // Determine base URL dynamically
-            const baseURL = window.location.origin.includes("localhost") || window.location.origin.includes("127.0.0.1")
-            ? "https://text-file-translator-web-app-with-fastapi.onrender.com"
-            : "https://text-file-translator-web-app-with-fastapi.onrender.com";
+            const baseURL = "https://text-file-translator-web-app-with-fastapi.onrender.com"
     
             try {
                 const response = await fetch(`${baseURL}/history`);
