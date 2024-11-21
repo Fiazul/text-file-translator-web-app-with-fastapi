@@ -40,7 +40,7 @@
         let socket;
     
         const baseURL = window.location.origin.includes("localhost") || window.location.origin.includes("127.0.0.1")
-            ? "http://127.0.0.1:8000"
+            ? "https://text-file-translator-web-app-with-fastapi.onrender.com"
             : "https://text-file-translator-web-app-with-fastapi.onrender.com";
     
     
@@ -59,7 +59,7 @@
     
         function connectWebSocket() {
             const wsProtocol = baseURL.startsWith("https") ? "wss://" : "ws://";
-            const wsUrl = `${wsProtocol}${window.location.hostname}/ws`;
+            const wsUrl = `${wsProtocol}${window.location.host}/ws`;
             socket = new WebSocket(wsUrl);
     
             socket.onopen = () => {
